@@ -1,0 +1,131 @@
+<!DOCTYPE html><html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KobylakShop</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; background: #111; color: #eee; scroll-behavior: smooth; }
+    header, footer { background: #222; padding: 20px; text-align: center; }
+    h1, h2, h3 { color: #00d8ff; margin: 0 0 10px; }
+    nav { background: #333; padding: 10px; display: flex; align-items: center; }
+    nav h1 { flex: 1; margin: 0; font-size: 24px; }
+    #menuBtn { background: #00d8ff; color: #000; border: none; padding: 10px; border-radius: 4px; cursor: pointer; z-index: 1000; }
+    #menuPanel { display: none; position: fixed; top: 50px; left: 10px; background: #222; padding: 10px; border-radius: 8px; box-shadow: 0 0 10px #000; z-index: 999; }
+    #menuPanel button { display: block; background: #00d8ff; color: #000; border: none; padding: 8px; margin: 5px 0; width: 160px; border-radius: 4px; text-align: left; cursor: pointer; }
+    #menuPanel button:hover { background: #00aacc; }
+    #cartIcon { background: #00d8ff; color: #000; padding: 10px; border-radius: 50%; cursor: pointer; }
+    #cartModal { display: none; position: fixed; top: 50px; right: 10px; background: #222; padding: 15px; width: 350px; max-height: 75vh; overflow-y: auto; border-radius: 8px; box-shadow: 0 0 10px #000; z-index: 998; }
+    .container { padding: 20px; max-width: 1000px; margin: auto; }
+    .item { background: #1e1e1e; padding: 15px; margin: 10px 0; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; }
+    .price { color: #0f0; font-weight: bold; }
+    .btn { padding: 8px 12px; background: #00d8ff; color: black; border: none; border-radius: 6px; cursor: pointer; }
+    .btn:hover { background: #00aacc; }
+    .section { margin: 30px 0; }
+    .faq, .policy, .contact { background: #1a1a1a; padding: 20px; border-radius: 8px; }
+    .cart-item { margin-bottom: 10px; }
+    .remove { margin-left: 10px; color: red; cursor: pointer; }
+    #cartTotal { font-weight: bold; margin-top: 10px; }
+    #paypal-button-container { margin-top: 15px; }
+  </style>
+  <script src="https://www.paypal.com/sdk/js?client-id=ATv6dRwcanFsAYgKPvbrIFkoyfCj7kqHLP0KIor_abuxGAhtST4i8UuXvb9sob4vzhNdrAJ0Jp-Sx0_1&currency=PLN"></script>
+</head>
+<body>
+  <nav>
+    <button id="menuBtn">☰</button>
+    <h1>KobylakShop-jak nie kupisz jesteś pizdą</h1>
+    <div id="cartIcon">🛒<span id="cartCount">0</span></div>
+  </nav>
+  <div id="menuPanel">
+    <button onclick="scrollToSection('brawl'); toggleMenu()">Brawl Stars</button>
+    <button onclick="scrollToSection('fortnite'); toggleMenu()">Fortnite</button/>
+    <button onclick="scrollToSection('jak-to-dziala'); toggleMenu()">Jak to działa</button/>
+    <button onclick="scrollToSection('faq'); toggleMenu()">FAQ</button>
+    <button onclick="scrollToSection('policy'); toggleMenu()">Polityka</button>
+    <button onclick="scrollToSection('contact'); toggleMenu()">Kontakt</button>
+  </div>
+  <div id="cartModal">
+    <h3>Twój koszyk</h3>
+    <div id="cartItems"></div>
+    <div id="cartTotal">Razem: 0 zł</div>
+    <div id="paypal-button-container"></div>
+  </div>
+  <div class="container">
+    <!-- Brawl Stars Section -->
+    <div class="section" id="brawl">
+      <h2>Brawl Stars – Gemy</h2>
+      <div class="item"><span>33 gemów</span><span class="price">10 zł</span><button class="btn" onclick="addToCart('33 gemów',10)">Dodaj</button></div>
+      <div class="item"><span>88 gemów</span><span class="price">25 zł</span><button class="btn" onclick="addToCart('88 gemów',25)">Dodaj</button></div>
+      <div class="item"><span>187 gemów</span><span class="price">50 zł</span><button class="btn" onclick="addToCart('187 gemów',50)">Dodaj</button></div>
+      <div class="item"><span>396 gemów</span><span class="price">100 zł</span><button class="btn" onclick="addToCart('396 gemów',100)">Dodaj</button></div>
+      <div class="item"><span>1045 gemów</span><span class="price">250 zł</span><button class="btn" onclick="addToCart('1045 gemów',250)">Dodaj</button></div>
+      <div class="item"><span>2200 gemów</span><span class="price">550 zł</span><button class="btn" onclick="addToCart('2200 gemów',550)">Dodaj</button></div>
+    </div>
+    <!-- Karnety -->
+    <div class="section">
+      <h2>Karnety</h2>
+      <div class="item"><span>Karnet Premium</span><span class="price">35 zł</span><button class="btn" onclick="addToCart('Karnet Premium',35)">Dodaj</button></div>
+      <div class="item"><span>Karnet Plus</span><span class="price">50 zł</span><button class="btn" onclick="addToCart('Karnet Plus',50)">Dodaj</button></div>
+    </div>
+    <!-- Fortnite Section -->
+    <div class="section" id="fortnite">
+      <h2>Fortnite – V-Dolce & Subskrypcja</h2>
+      <div class="item"><span>1000 V-dolców</span><span class="price">35 zł</span><button class="btn" onclick="addToCart('1000 V-dolców',35)">Dodaj</button></div>
+      <div class="item"><span>2800 V-dolców</span><span class="price">80 zł</span><button class="btn" onclick="addToCart('2800 V-dolców',80)">Dodaj</button></div>
+      <div class="item"><span>5000 V-dolców</span><span class="price">140 zł</span><button class="btn" onclick="addToCart('5000 V-dolców',140)">Dodaj</button></div>
+      <div class="item"><span>13500 V-dolców</span><span class="price">350 zł</span><button class="btn" onclick="addToCart('13500 V-dolców',350)">Dodaj</button></div>
+      <div class="item"><span>Fortnite Crew</span><span class="price">35 zł/miesiąc</span><button class="btn" onclick="addToCart('Fortnite Crew',35)">Dodaj</button></div>
+    </div>
+    <section id="jak-to-dziala" class="p-6 bg-gray-100 rounded-2xl shadow-md max-w-4xl mx-auto my-8">
+  <h2 class="text-2xl font-bold mb-4">Jak to działa?</h2>
+  <ol class="list-decimal list-inside space-y-2 text-gray-700">
+    <li>Wybierz interesujący Cię produkt z naszej oferty i dodaj go do koszyka.</li>
+    <li>Przejdź do koszyka i dokonaj płatności za pomocą <strong>PayPal</strong>.</li>
+    <li>Po dokonaniu zakupu otrzymamy informację i skontaktujemy się z Tobą mailowo w celu realizacji zamówienia.</li>
+    <li>Realizacja zamówień odbywa się ręcznie, dlatego czas oczekiwania to zazwyczaj kilka minut do kilku godzin – zależnie od dostępności.</li>
+    <li>W przypadku pytań lub problemów – odpowiemy również na Twoją wiadomość e-mail.</li>
+  </ol>
+</section>
+    <!-- FAQ Section -->
+    <div class="faq section" id="faq">
+      <h3>FAQ</h3>
+      <p><strong>Jak długo trwa realizacja zamówienia?</strong><br>Realizacja jest ręczna i odbywa się najszybszym możliwym czasie.</p>
+      <p><strong>Czy mogę zmienić zamówienie?</strong><br>Prosimy o kontakt email w ciągu 15 minut od złożenia zakupu.</p>
+      <p><strong>Co zrobić, jeśli nie otrzymam zamówienia?</strong><br>Wyślij wiadomość na <a href="mailto:shopkobylak@gmail.com">shopkobylak@gmail.com</a>. Rozwiążemy problem jak najszybciej.</p>
+    </div>
+    <!-- Privacy Policy -->
+    <div class="policy section" id="policy">
+      <h3>Polityka Prywatności</h3>
+      <p>Zbieramy jedynie dane niezbędne do realizacji zamówienia: nick gry i email. Nie udostępniamy danych osobom trzecim. Przechowujemy maksymalnie 3 lata.</p>
+    </div>
+    <!-- Contact Section -->
+    <div class="contact section" id="contact">
+      <h3>Kontakt</h3>
+      <p>Email: <a href="mailto:shopkobylak@gmail.com">shopkobylak@gmail.com</a></p>
+      <p>Instagram: <a href="https://instagram.com/kobylakshop" target="_blank">@kobylakshop</a></p>
+    </div>
+  </div>
+  <footer><p>&copy; 2025 KobylakShop</p></footer>
+  <script>
+    function toggleMenu() { const p = document.getElementById('menuPanel'); p.style.display = p.style.display==='block'?'none':'block'; }
+    document.getElementById('menuBtn').addEventListener('click', toggleMenu);
+    function scrollToSection(id) { document.getElementById(id).scrollIntoView({ behavior:'smooth' }); toggleMenu(); }let cart = [];
+const cartIcon = document.getElementById('cartIcon');
+const cartModal = document.getElementById('cartModal');
+cartIcon.addEventListener('click', () => { cartModal.style.display = cartModal.style.display==='block'?'none':'block'; });
+
+function addToCart(name, price) { cart.push({name, price}); renderCart(); }
+function removeFromCart(i) { cart.splice(i,1); renderCart(); }
+function renderCart() {
+  const items = document.getElementById('cartItems'); items.innerHTML = '';
+  let total = 0;
+  cart.forEach((it,i)=>{ total+=it.price; const d=document.createElement('div'); d.className='cart-item'; d.innerHTML=`${it.name} - ${it.price} zł <span class='remove' onclick='removeFromCart(${i})'>✖</span>`; items.appendChild(d); });
+  document.getElementById('cartTotal').innerText = `Razem: ${total.toFixed(2)} zł`;
+  document.getElementById('cartCount').innerText = cart.length;
+  document.getElementById('paypal-button-container').innerHTML='';
+  paypal.Buttons({ createOrder:(d,a)=>a.order.create({purchase_units:[{amount:{value:total.toFixed(2)}}]}), onApprove:(d,a)=>a.order.capture().then(()=>{alert('Dziękujemy za zakup!'); cart=[]; renderCart();}) }).render('#paypal-button-container');
+}
+renderCart();
+
+  </script>
+</body>
+</html>
